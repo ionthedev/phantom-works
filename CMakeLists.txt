@@ -1,29 +1,32 @@
-cmake_minimum_required(VERSION 3.29)
-add_executable(PhantomWorks)
-add_executable(PH::Editor ALIAS PhantomWorks)
+# PhantomWorks/CMakeLists.txt
+cmake_minimum_required(VERSION 3.16)
+project(PhantomWorks)
 
-target_sources(
-        PhantomWorks
-        PRIVATE
-        "src/PhantomWorks.cpp"
-)
+set(CMAKE_CXX_STANDARD 17)
+set(PHANTOM_ENGINE_DIR ../phantom-engine)
+# Add PhantomEngine as an external project or a subdirectory
+if(!TOP_LEVEL)
+    add_subdirectory(${PHANTOM_ENGINE_DIR} ${CMAKE_BINARY_DIR}/phantom-engine)
+    add_subdirectory(${PHANTOM_ENGINE_DIR} ${CMAKE_BINARY_DIR}/phantom-engine/src/ThirdParty/imgui-docking)
+    add_subdirectory(${PHANTOM_ENGINE_DIR} ${CMAKE_BINARY_DIR}/phantom-engine/src/ThirdParty/rlImGui)
+endif ()
 
-target_include_directories(
-        PhantomWorks
-        PRIVATE
-        "src"
-)
 
-set_target_properties(
-        PhantomWorks
-        PROPERTIES
-        CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED TRUE
-)
+# Include directories
+include_directories(${CMAKE_SOURCE_DIR}/src)
+
+
+# Add the PhantomWorks executable
+
+add_executable(PhantomWorks src/PhantomWorks.cpp)
+
 
 
 # Link against PhantomEngine
-target_link_libraries(
-        PhantomWorks
-        PUBLIC
-        PhantomEngine)
+target_link_libraries(PhantomWorks PRIVATE PhantomEngine)
+
+# Include directories
+target_include_directories(PhantomWorks
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../phantom-engine/src
+)
