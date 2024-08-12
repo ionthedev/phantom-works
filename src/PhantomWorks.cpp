@@ -20,9 +20,16 @@ public:
 
     ~PhantomWorks()
     {
-
     }
+
+    void Run() override;
 };
+
+void PhantomWorks::Run()
+{
+    Application::Run();
+
+}
 
 Phantom::Application* Phantom::CreateApplication()
 {
